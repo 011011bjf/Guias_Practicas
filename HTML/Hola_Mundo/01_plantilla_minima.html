@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  PLANTILLA MÍNIMA HTML5 — Aplicaciones Web UTEQ — Semana 02
+  ============================================================
+  Archivo:  01_plantilla_minima.html
+  Propósito: Estructura mínima que debe tener TODO documento HTML5
+             antes de añadir cualquier contenido. Este es el punto
+             de partida obligatorio para cualquier página nueva.
+  Autor:    Cátedra Aplicaciones Web - UTEQ
+  Licencia: Uso académico
+  ============================================================
+
+  CINCO LÍNEAS NO NEGOCIABLES (memorízalas):
+
+  1) <!DOCTYPE html>
+     Debe ser SIEMPRE la primera línea, sin espacios antes.
+     Le dice al navegador: "renderiza en modo estándar HTML5".
+     Si la omites, el navegador entra en "quirks mode" y tu CSS
+     se comporta de forma impredecible.
+
+  2) <html lang="es">
+     El atributo lang es CRÍTICO para accesibilidad:
+       - Los lectores de pantalla cambian de pronunciación.
+       - Google muestra resultados según el idioma.
+       - El corrector ortográfico del navegador funciona.
+     Usa "es" para español, "es-EC" si quieres ser específico,
+     "en" para inglés, "pt-BR" para portugués brasileño, etc.
+
+  3) <meta charset="UTF-8">
+     Debe ir entre los PRIMEROS 1024 bytes del documento.
+     Sin esto: tildes y eñes aparecen como caracteres extraños
+     (mojibake): "Quevedo" → "QuÃ©vedo".
+
+  4) <meta name="viewport" ...>
+     Sin esta línea, tu página NO es responsive en móviles.
+     Los móviles renderizan a 980px virtuales y hacen zoom-out.
+     Con esto, respetan el ancho real del dispositivo.
+
+  5) <title>
+     Aparece en la pestaña del navegador, en los marcadores,
+     en los resultados de Google y es lo PRIMERO que lee un
+     lector de pantalla. Debe ser descriptivo, no "Documento"
+     ni "Página sin título".
+  ============================================================
+-->
+<html lang="es-EC">
+<head>
+    <!-- Codificación de caracteres: PRIMERA línea dentro de <head> -->
+    <meta charset="UTF-8">
+
+    <!-- Viewport: imprescindible para diseño responsive -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Compatibilidad con navegadores legacy (opcional pero recomendado) -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Descripción para motores de búsqueda (SEO) -->
+    <meta name="description" content="Plantilla mínima HTML5 — Curso Aplicaciones Web UTEQ 2026">
+
+    <!-- Autor y palabras clave (opcional) -->
+    <meta name="author" content="Tu Nombre - Estudiante UTEQ">
+    <meta name="keywords" content="HTML5, semántica, UTEQ, aplicaciones web">
+
+    <!-- Título visible en la pestaña del navegador -->
+    <title>Mi Primera Página HTML5 | UTEQ</title>
+
+    <!-- Hoja de estilos externa (la añadiremos en la semana 03) -->
+    <!-- <link rel="stylesheet" href="estilos.css"> -->
+
+    <!-- Favicon: ícono de la pestaña -->
+    <!-- <link rel="icon" type="image/png" href="favicon.png"> -->
+</head>
+<body>
+    <!--
+      A partir de aquí va TODO el contenido visible.
+      En la sección siguiente añadiremos elementos semánticos.
+    -->
+    <h1>¡Hola, mundo HTML5!</h1>
+    <p>
+        Este es mi primer documento HTML5 válido. Cumple con todas
+        las reglas mínimas del W3C y será renderizado correctamente
+        por cualquier navegador moderno.
+    </p>
+
+    <!-- VIDEO -->
+    <figure class="video-card">
+
+      <video
+        controls
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        poster="poster-uteq.jpg"
+        crossorigin="anonymous">
+
+        <source src="bienvenida.webm" type="video/webm">
+        <source src="bienvenida.mp4" type="video/mp4">
+
+        <track
+          kind="captions"
+          src="bienvenida.es.vtt"
+          srclang="es"
+          label="Español"
+          default>
+
+        Tu navegador no soporta video HTML5.
+
+      </video>
+
+      <figcaption>
+        Video de bienvenida institucional - UTEQ
+      </figcaption>
+
+    </figure>
+
+    <!-- MAPA -->
+    <div class="map-card">
+
+      <iframe
+        src="https://maps.google.com/maps?q=Universidad%20T%C3%A9cnica%20Estatal%20de%20Quevedo&t=&z=17&ie=UTF8&iwloc=&output=embed"
+        width="100%"
+        height="350"
+        style="border:0;"
+        allowfullscreen=""
+        loading="lazy">
+      </iframe>
+
+      <div class="map-info">
+        Universidad Técnica Estatal de Quevedo
+      </div>
+
+    </div>
+
+    </section>
+
+    <!-- Script al final del body para no bloquear la renderización -->
+    <!-- <script src="app.js" defer></script> -->
+</body>
+</html>

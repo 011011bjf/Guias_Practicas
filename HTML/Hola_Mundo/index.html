@@ -1,0 +1,105 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mi primera web </title>
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="description" content="">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+        rel="stylesheet"
+
+</head>
+
+<nav>
+  <ul>
+    <li>
+      <a href="index.html">Inicio</a>
+      <a href="http://j.com">Desarollo</a>
+      <a href="http://">Conclucion</a>
+    </li>
+  </ul>
+</nav>
+
+<body>
+
+  <!-- Add your site or application content here -->
+  <p>Hello world! This is HTML5 Boilerplate.</p>
+
+    <div class="card">
+        <div class="card__header">
+            <h2 class="card__title">Password Validator</h2>
+            <p class="card__subtitle">Your password must meet all requirements below</p>
+        </div>
+
+        <div class="input-group">
+            <div class="input-group__field-wrapper">
+                <input
+                    id="password"
+                    type="password"
+                    class="input-group__field"
+                    placeholder="Your Password"
+                    autocomplete="new-password"
+                >
+                <label for="password" class="input-group__label">Password</label>
+                <button
+                    type="button"
+                    class="input-group__toggle"
+                    aria-label="Toggle password visibility"
+                ></button>
+            </div>
+        </div>
+
+        <div class="strength">
+            <div class="strength__bar-wrapper">
+                <div class="strength__bar-track">
+                    <div class="strength__bar-fill" id="strength-fill"></div>
+                </div>
+                <div class="strength__bar-label">
+                    <span class="strength__bar-text">Password strength</span>
+                    <span class="strength__bar-level" id="strength-level"></span>
+                </div>
+            </div>
+
+            <ul class="rules" role="list">
+                <li class="rules__item" data-rule="low-upper-case">
+                    <span class="rules__icon"></span>
+                    <span class="rules__text">Lowercase &amp; Uppercase</span>
+                </li>
+                <li class="rules__item" data-rule="one-number">
+                    <span class="rules__icon"></span>
+                    <span class="rules__text">Number (0-9)</span>
+                </li>
+                <li class="rules__item" data-rule="one-special-char">
+                    <span class="rules__icon"></span>
+                    <span class="rules__text">Special Character (!@#$%^&*)</span>
+                </li>
+                <li class="rules__item" data-rule="eight-character">
+                    <span class="rules__icon"></span>
+                    <span class="rules__text">At least 8 Characters</span>
+                </li>
+            </ul>
+        </div>
+
+        <button type="button" class="btn-primary" id="submit-btn" disabled>
+            Continue
+        </button>
+    </div>
+
+
+
+
+  <script src="js/app.js"></script>
+
+</body>
+<footer>
+  <div>
+    <a href="http://github.com">Github</a>
+  </div>
+</footer>
+</html>

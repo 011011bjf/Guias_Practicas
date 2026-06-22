@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Toast Notifications</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style_notificaciones.css">
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="notification notification--success">
+            <div class="notification__body">
+                <img src="assets/check-circle.svg" alt="Success" class="notification__icon">
+                Your account has been created! &#128640; 
+            </div>
+            <div class="notification__progress"></div>
+        </div>
+
+        <div class="notification notification--failure">
+            <div class="notification__body">
+                <img src="assets/cross-circle.svg" alt="Failure" class="notification__icon">
+                Account creation failed! &#128543;
+            </div>
+            <div class="notification__progress"></div>
+        </div>
+
+        <div class="notification notification--warning">
+            <div class="notification__body">
+                <img src="assets/email.svg" alt="Email" class="notification__icon">
+                Please verify your email address.
+            </div>
+            <div class="notification__progress"></div>
+        </div>
+
+        <div class="notification notification--info">
+            <div class="notification__body">
+                <img src="assets/info-circle.svg" alt="Info" class="notification__icon">
+                New update available.
+            </div>
+            <div class="notification__progress"></div>
+        </div>
+
+        <div class="notification notification--syncing">
+            <div class="notification__body">
+                <img src="assets/loader.svg" alt="Loading" class="notification__icon notification__icon--spin">
+                Syncing your data...
+            </div>
+            <div class="notification__progress"></div>
+        </div>
+        <div class="notification notification--action">
+            <div class="notification__body">
+                <img src="assets/trash.svg" alt="Undo" class="notification__icon">
+                <span>File deleted. <a href="#">Undo?</a></span>
+            </div>
+            <div class="notification__progress"></div>
+        </div>
+        <div class="notification notification--offline">
+            <div class="notification__body">
+                <img src="assets/wifi-off.svg" alt="Offline" class="notification__icon">
+                You are currently offline.
+            </div>
+            <div class="notification__progress"></div>
+        </div>
+
+
+    </div>
+
+</body>
+</html>

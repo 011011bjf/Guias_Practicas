@@ -1,4 +1,9 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,16 +12,61 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("Postgres"),
-        npg => npg.SetPostgresVersion(16, 0)
+        npg => npg.SetPostgresVersion(16, 0) // Guia mentions 18, but previous was 16. I'll keep 16.
     )
 );
 
-// OpenAPI
+// Servicios
+builder.Services.AddScoped<IEstudianteService, EstudianteService>();
+
+// CORS
+builder.Services.AddCors(o => o.AddPolicy("frontend", p => 
+    p.WithOrigins("http://localhost:4200")
+     .AllowAnyHeader()
+     .AllowAnyMethod()));
+
+// Autenticación JWT
+var jwtClave = builder.Configuration["Jwt:Clave"] ?? "12345678901234567890123456789012";
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opt =>
+    {
+        opt.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "uteq-appweb",
+            ValidAudience = "uteq-estudiantes",
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtClave))
+        };
+    });
+
+builder.Services.AddAuthorization();
+
+// OpenAPI y Controladores
 builder.Services.AddOpenApi();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// OpenAPI solo en desarrollo
+// Manejo global de excepciones (ProblemDetails)
+app.UseExceptionHandler(exceptionHandlerApp =>
+{
+    exceptionHandlerApp.Run(async context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+        
+        await context.Response.WriteAsJsonAsync(new ProblemDetails
+        {
+            Status = StatusCodes.Status500InternalServerError,
+            Title = "An error occurred while processing your request.",
+            Detail = exceptionHandlerPathFeature?.Error.Message
+        });
+    });
+});
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -24,86 +74,24 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("frontend");
+app.UseAuthentication();
+app.UseAuthorization();
 
-// =========================
-// ENDPOINTS CRUD
-// =========================
+// Mapear endpoints y controladores
+app.MapControllers();
+app.MapBasicosEndpoints();
+app.MapEstudiantesEndpoints();
+app.MapAuthEndpoints(builder.Configuration);
 
-var grupo = app.MapGroup("/v1/estudiantes");
-
-// READ: todos
-grupo.MapGet("/", async (AppDbContext db) =>
-    await db.Estudiantes
-        .OrderBy(e => e.Id)
-        .Select(e => new EstudianteSalidaDto(
-            e.Id, e.Nombre, e.Correo, e.Carrera, e.Creado))
-        .ToListAsync()
-);
-
-// READ: por id
-grupo.MapGet("/{id:int}", async (int id, AppDbContext db) =>
-{
-    var e = await db.Estudiantes.FindAsync(id);
-
-    return e is null
-        ? Results.NotFound()
-        : Results.Ok(new EstudianteSalidaDto(
-            e.Id, e.Nombre, e.Correo, e.Carrera, e.Creado));
-});
-
-// CREATE
-grupo.MapPost("/", async (EstudianteEntradaDto dto, AppDbContext db) =>
-{
-    var errores = ValidadorEstudiante.Validar(dto);
-    if (errores.Count > 0)
-        return Results.ValidationProblem(errores);
-
-    var e = new Estudiante
-    {
-        Nombre = dto.Nombre,
-        Correo = dto.Correo,
-        Carrera = dto.Carrera,
-        Creado = DateTime.UtcNow
-    };
-
-    db.Estudiantes.Add(e);
+// Endpoints de Carreras
+var grupoCarreras = app.MapGroup("/v1/carreras").RequireAuthorization();
+grupoCarreras.MapGet("/", async (AppDbContext db) => await db.Carreras.ToListAsync());
+grupoCarreras.MapPost("/", async (CarreraEntradaDto dto, AppDbContext db) => {
+    var c = new Carrera { Nombre = dto.Nombre };
+    db.Carreras.Add(c);
     await db.SaveChangesAsync();
-
-    return Results.Created($"/v1/estudiantes/{e.Id}",
-        new EstudianteSalidaDto(e.Id, e.Nombre, e.Correo, e.Carrera, e.Creado));
-});
-
-// UPDATE
-grupo.MapPut("/{id:int}", async (int id, EstudianteEntradaDto dto, AppDbContext db) =>
-{
-    var errores = ValidadorEstudiante.Validar(dto);
-    if (errores.Count > 0)
-        return Results.ValidationProblem(errores);
-
-    var e = await db.Estudiantes.FindAsync(id);
-    if (e is null)
-        return Results.NotFound();
-
-    e.Nombre = dto.Nombre;
-    e.Correo = dto.Correo;
-    e.Carrera = dto.Carrera;
-
-    await db.SaveChangesAsync();
-
-    return Results.NoContent();
-});
-
-// DELETE
-grupo.MapDelete("/{id:int}", async (int id, AppDbContext db) =>
-{
-    var e = await db.Estudiantes.FindAsync(id);
-    if (e is null)
-        return Results.NotFound();
-
-    db.Estudiantes.Remove(e);
-    await db.SaveChangesAsync();
-
-    return Results.NoContent();
+    return Results.Created($"/v1/carreras/{c.Id}", new CarreraSalidaDto(c.Id, c.Nombre));
 });
 
 app.Run();

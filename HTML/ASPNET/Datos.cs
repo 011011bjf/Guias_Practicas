@@ -1,30 +1,53 @@
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
-// Entidad
+// Entidades
+public class Carrera
+{
+    public int Id { get; set; }
+    public string Nombre { get; set; } = "";
+
+    [JsonIgnore]
+    public List<Estudiante> Estudiantes { get; set; } = new();
+}
+
 public class Estudiante
 {
     public int Id { get; set; }
     public string Nombre { get; set; } = "";
     public string Correo { get; set; } = "";
-    public string Carrera { get; set; } = "";
+    
+    public int CarreraId { get; set; }
+    public Carrera? Carrera { get; set; }
+    
     public DateTime Creado { get; set; }
 }
 
-// DTO: lo que el cliente envía
+public class Curso
+{
+    public int Id { get; set; }
+    public string Nombre { get; set; } = "";
+}
+
+// DTOs
 public record EstudianteEntradaDto(
     string Nombre,
     string Correo,
-    string Carrera
+    int CarreraId
 );
 
-// DTO: lo que la API devuelve
 public record EstudianteSalidaDto(
     int Id,
     string Nombre,
     string Correo,
-    string Carrera,
+    string CarreraNombre,
     DateTime Creado
 );
+
+public record CarreraEntradaDto(string Nombre);
+public record CarreraSalidaDto(int Id, string Nombre);
+
+public record LoginDto(string Usuario, string Clave);
 
 // DbContext
 public class AppDbContext : DbContext
@@ -35,8 +58,11 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<Estudiante> Estudiantes => Set<Estudiante>();
+    public DbSet<Carrera> Carreras => Set<Carrera>();
+    public DbSet<Curso> Cursos => Set<Curso>();
 }
 
+// Validadores simples
 public static class ValidadorEstudiante
 {
     public static Dictionary<string, string[]> Validar(EstudianteEntradaDto e)
@@ -49,8 +75,8 @@ public static class ValidadorEstudiante
         if (string.IsNullOrWhiteSpace(e.Correo) || !e.Correo.Contains('@'))
             errores["correo"] = new[] { "El correo no es válido." };
 
-        if (string.IsNullOrWhiteSpace(e.Carrera))
-            errores["carrera"] = new[] { "La carrera es obligatoria." };
+        if (e.CarreraId <= 0)
+            errores["carreraId"] = new[] { "La carrera es obligatoria." };
 
         return errores;
     }

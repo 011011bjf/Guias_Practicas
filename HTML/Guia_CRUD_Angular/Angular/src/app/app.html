@@ -1,0 +1,26 @@
+<div class="app-layout">
+  <!-- Encabezado / Banner Principal -->
+  <header class="hero-header">
+    <div class="hero-content">
+      <div class="badge-v22">🚀 Angular 22 & Spring Boot CRUD</div>
+      <h1>Gestión de Productos y Catálogo</h1>
+      <p class="hero-desc">
+        Consumo moderno de API REST usando <strong>httpResource()</strong> para lecturas reactivas y <strong>HttpClient</strong> para mutaciones, con persistencia en PostgreSQL y resolución de CORS mediante proxy de desarrollo.
+      </p>
+    </div>
+  </header>
+
+  <!-- Contenedor Principal -->
+  <main class="main-content">
+    <!-- Componente de Creación de Producto (Mutación) -->
+    <app-nuevo-producto (productoCreado)="onProductoCreado()"></app-nuevo-producto>
+
+    <!-- Componente de Lista de Productos (Lectura Reactiva + Eliminación) -->
+    <app-lista-productos></app-lista-productos>
+  </main>
+
+  <!-- Pie de Página -->
+  <footer class="app-footer">
+    <p>Práctica de Arquitectura Web · Angular 22 Zoneless & Spring Boot 3.4+ con PostgreSQL</p>
+  </footer>
+</div>

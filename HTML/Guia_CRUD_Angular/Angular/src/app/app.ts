@@ -4,7 +4,6 @@ import { ListaProductosComponent } from './components/lista-productos/lista-prod
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [NuevoProductoComponent, ListaProductosComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'

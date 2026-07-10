@@ -6,8 +6,8 @@ import { Producto } from '../models/producto.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductoService {
-  private http = inject(HttpClient);
-  private urlBase = '/api/productos';
+   private readonly http = inject(HttpClient);
+  private readonly urlBase = '/api/productos';
 
   crear(producto: Omit<Producto, 'id'>): Observable<Producto> {
     return this.http.post<Producto>(this.urlBase, producto).pipe(
